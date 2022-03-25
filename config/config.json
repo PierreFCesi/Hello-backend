@@ -1,0 +1,23 @@
+{
+    "development": {
+      "username": "dev",
+      "password": "",
+      "database": "database_development_partyist",
+      "host": "164.132.104.41",
+      "dialect": "mysql"
+    },
+    "test": {
+      "username": "dev",
+      "password": "",
+      "database": "database_test_partyist",
+      "host": "164.132.104.41",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "dev",
+      "password": "",
+      "database": "database_production_partyist",
+      "host": "164.132.104.41",
+      "dialect": "mysql"
+    }
+  }

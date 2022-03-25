@@ -1,73 +1,26 @@
-const http = require('http')
-const hash = require('object-hash')
-const controller = require('./controller')
-const PORT = 5000
-var express = require('express')
-var app = express()
+// IMPORTS
+var express = require('express');
+var bodyParser = require('body-parser');
+var apiRouter = require('./router').router;
+var cors = require('cors');
 
-app.get('/',  async function (req, res)  {
-  res.send('home')
-})
+//INSTANTIATE SERVER
+var server = express();
 
-app.get('/login/:userid',  async function (req, res)  {
-  res.json({userid: req.params.userid})
-  const token = controller.generateAccessToken()
-  res.send('login' + token)
-})
+//BODYPARSER Config
+server.use(bodyParser.urlencoded({extended:true}));
+server.use(bodyParser.json());
+server.use(cors());
 
-app.get('/logout',  async function (req, res)  {
-  res.send('logout')
-})
+//CONFIGURE ROUTES
+server.get('/', function(req, res){
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send('<h1>Hello World</h1>');
+});
 
-app.post('/register',  async function (req, res)  {
-  const body = req.rawHeaders
-  const username = body[1]
-  const psw = hash(body[3])
+server.use('/api/', apiRouter);
 
-  const resp = {username: username, psw: psw, token: controller.generateAccessToken(username)}
-  res.send(resp)
-})
-
-app.post('/create-session', async function (req, res)  {
-  // requete en forme : http://localhost:5000/create-session/CD45FT
-
-  var id = req.params.id_class
-  var o_date = new Date();
-  var period = ""
-  var hours = o_date.getHours()
-  if(hours <= 12)
-  {
-    period="morning"
-  }
-  if(hours >= 13) {
-    period="afternoon"
-  }
-  res.send('create-session ' + id + ' ' + period)
-})
-
-app.get('/get-user-absences', async function(req, res) {
-  res.send('get-user-absences')
-})
-
-app.get('/refresh-token', async function(req, res){
-  res.send('refresh-token')
-
-})
-
-app.post('/end-session',  async function (req, res)  {
-  res.send('end-session')
-})
-
-
-app.get('/get-token', async function(req, res){
-  res.send('get-token')
-})
-
-app.get('/get-user-status', async function(req, res){
-  res.send('get-user-status')
-})
-
-
-app.listen(PORT,  async function (){ 
-  console.log(`listening on http://localhost:${PORT}`)
-})
+//LAUNCH SERVER
+server.listen(5000, function() {
+    console.log('Server launched...');
+});
