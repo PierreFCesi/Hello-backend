@@ -21,6 +21,6 @@ server.get('/', function(req, res){
 server.use('/api/', apiRouter);
 
 //LAUNCH SERVER
-server.listen(5000, function() {
+server.listen(5555, function() {
     console.log('Server launched...');
 });

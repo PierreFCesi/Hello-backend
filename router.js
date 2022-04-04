@@ -7,7 +7,8 @@ exports.router = (function() {
     var apiRouter = express.Router();
 
     //Users routes
-    apiRouter.route('/users/login/').post(usersCtrl.login);
-    apiRouter.route('/users/me/').get(usersCtrl.getUserProfile);
+    apiRouter.route('/auth/signup/').post(usersCtrl.create);
+    apiRouter.route('/auth/signin/').post(usersCtrl.login);
+    //apiRouter.route('/users/lout/').get(usersCtrl.getUserProfile);
     return apiRouter;
 })();

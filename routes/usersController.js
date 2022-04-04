@@ -1,7 +1,7 @@
 //Imports
 var bcrypt = require('bcrypt');
 var jwtUtils = require('../utils/jwt.utils');
-//var models = require('../models');
+var models = require('../models');
 var asyncLib = require('async');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -9,6 +9,84 @@ const PWD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/;
 
 //Routes
 module.exports = {
+  create: function(req, res){
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        var params = {
+            email : req.body.email,
+            password :req.body.password,
+            role : req.body.role,
+            firstname : req.body.firstname,
+            lastname : req.body.lastname
+        };
+        
+        if(params.email == null || params.password == null || params.role == null  || params.firstname == null || params.lastname == null )
+        
+        if(!EMAIL_REGEX.test(params.email)){
+            return res.status(400).json({'error':'Email is not valid'});
+        }
+
+        if(!PWD_REGEX.test(params.password)){
+            return res.status(400).json({'error':'password invalid (must length 4 - 8 and include 1 number at least one upper case letter, one lower case letter )'});
+        }
+
+        asyncLib.waterfall([
+            function(done){
+                models.Users.findOne({
+                    attributes: ['email'],
+                    where: {email: params.email}
+                }).then(function(userFound){
+                    done(null, userFound);
+                }).catch(function(err){
+                    return res.status(500).json({'error': 'Unable to verify user.'})
+                });
+            },
+            function(userFound, done){
+                if(!userFound){
+                    bcrypt.hash(params.password, 5, function(err, bcryptedPassword){
+                        done(null, userFound, bcryptedPassword);
+                    });
+                }else{
+                    return res.status(409).json({
+                        'error': 'This user is already exist.'
+                    })
+                }
+            },
+            function(userFound, bcryptedPassword, done){
+                var newProfile = models.Profiles.create({
+                    firstname: params.firstname, lastname: params.lastname, avatar: null
+                }).then(function(profile){
+                    console.log(profile.dataValues.id)
+                    var newUser = models.Users.create({
+                        email: params.email,
+                        password: bcryptedPassword,
+                        rol_id: params.role,
+                        prf_id: profile.dataValues.id
+                    })
+                    .then(function(newUser){
+                        done(newUser);
+                    })
+                    .catch(function(err){
+                        console.log(err)
+                        return res.status(500).json({'error': 'Cannot add the user.'})
+                    });
+                }).catch(function(err){
+                    console.log(err)
+                    return res.status(500).json({'error': 'Cannot add the profile of user.'})
+                });
+                
+            }
+        ], function(newUser){
+            if(newUser){
+                console.log(newUser)
+                return res.status(200).json({
+                    'access_token': jwtUtils.generateTokenForUser(newUser),
+                    'expires_in' : jwtUtils.getExpiresIn()
+                });
+            }else{
+                return res.status(500).json({'error': 'Cannot add the user.'})
+            }
+        });
+    },
     login: function(req, res){
         //Params
         var email = req.body.email;
@@ -18,10 +96,10 @@ module.exports = {
             return res.status(400).json({'error': 'missing parameters'});
         }
 
-       /* asyncLib.waterfall([
+        asyncLib.waterfall([
             function(done){
-                models.users.findOne({
-                    where: {usr_email:email}
+                models.Users.findOne({
+                    where: {email:email}
                 }).then(function(userFound){
                    done(null, userFound);
                 }).catch(function(err){
@@ -30,7 +108,7 @@ module.exports = {
             },
             function(userFound, done){
                 if(userFound){
-                    bcrypt.compare(password, userFound.usr_password, function(errBycrypt, resBycrypt){
+                    bcrypt.compare(password, userFound.password, function(errBycrypt, resBycrypt){
                         done(null, userFound, resBycrypt);
                     });
                 } else{
@@ -56,7 +134,7 @@ module.exports = {
                 return res.status(500).json({'error': 'Cannot log on user.'})
             }
             
-        });*/
+        });
     },
     getUserProfile: function(req, res){
         //Getting auth header
@@ -65,7 +143,7 @@ module.exports = {
         if(userID < 0 )
             return res.status(400).json({'error': 'Token error'});
 
-       /* models.users.findOne({
+        models.users.findOne({
             attributes: ['usr_id', 'usr_email', 'usr_pseudo'],
             where: {usr_id: userID}
         }).then(function(user){
@@ -80,7 +158,7 @@ module.exports = {
             }
         }).catch(function(err){
             res.status(500).json({'error': 'cannot fetch user'})
-        });*/
+        });
     },
     updateUserProfile: function(req, res) {
         // Getting auth header

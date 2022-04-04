@@ -1,0 +1,10 @@
+sequelize model:create --attributes "name:string" --name Roles
+sequelize model:create --attributes "firstname:string lastname:string avatar:string" --name Profiles
+sequelize model:create --attributes "diploma_title:string shortcuts:string" --name Education
+sequelize model:create --attributes "time_start:date time_end:date" --name Attendances
+sequelize model:create --attributes "name:date" --name Reasons
+sequelize model:create --attributes "email:string password:string prf_id:integer rol_id:integer" --name Users
+sequelize model:create --attributes "code_ana:string year:string edu_id:integer" --name Promos
+sequelize model:create --attributes "usr_id:integer prm_id:integer" --name Users_has_Promos
+sequelize model:create --attributes "usr_id:integer att_id:integer" --name Users_has_Attendances
+sequelize model:create --attributes "comment:text receipt:string usr_id:integer att_id:integer rea_id:integer" --name Absences

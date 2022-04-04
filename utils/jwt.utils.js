@@ -8,8 +8,8 @@ const EXPIRES_IN = '24h';
 module.exports = {
     generateTokenForUser: function(userData){
         return jwt.sign({
-            userId: userData.usr_id,
-            pseudo: userData.usr_pseudo
+            userID: userData.id,
+            role: userData.role
         },
         JWT_SIGN_SECRET,
         {
@@ -30,7 +30,7 @@ module.exports = {
                 var jwtToken = jwt.verify(token, JWT_SIGN_SECRET);
                 console.log(jwt.verify(token, JWT_SIGN_SECRET));
                 if(jwtToken != null)
-                    userID = jwtToken.userId;
+                    userID = jwtToken.userID;
             }catch(err){}
         }
         return userID;

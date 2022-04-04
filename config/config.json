@@ -1,23 +1,23 @@
 {
-    "development": {
-      "username": "dev",
-      "password": "",
-      "database": "database_development_partyist",
-      "host": "164.132.104.41",
-      "dialect": "mysql"
-    },
-    "test": {
-      "username": "dev",
-      "password": "",
-      "database": "database_test_partyist",
-      "host": "164.132.104.41",
-      "dialect": "mysql"
-    },
-    "production": {
-      "username": "dev",
-      "password": "",
-      "database": "database_production_partyist",
-      "host": "164.132.104.41",
-      "dialect": "mysql"
-    }
+  "development": {
+    "username": "root",
+    "password": "BigPassword12345Azerty",
+    "database": "database_hello_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "BigPassword12345Azerty",
+    "database": "database_hello_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "BigPassword12345Azerty",
+    "database": "database_hello_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   }
+}
