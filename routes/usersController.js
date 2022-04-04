@@ -102,6 +102,7 @@ module.exports = {
                     where: {email:email}
                 }).then(function(userFound){
                    done(null, userFound);
+                   
                 }).catch(function(err){
                     return res.status(500).json({'error': 'unable to verify user'})
                 })
