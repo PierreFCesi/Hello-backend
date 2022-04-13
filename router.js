@@ -9,6 +9,7 @@ exports.router = (function() {
     //Users routes
     apiRouter.route('/auth/signup/').post(usersCtrl.create);
     apiRouter.route('/auth/signin/').post(usersCtrl.login);
+    apiRouter.route('/admin/').get(usersCtrl.getRoleByToken);
     //apiRouter.route('/users/lout/').get(usersCtrl.getUserProfile);
     return apiRouter;
 })();

@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "root",
-    "password": "BigPassword12345Azerty",
+    "password": "BigPassword12345@",
     "database": "database_hello_development",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "BigPassword12345Azerty",
+    "password": "BigPassword12345@",
     "database": "database_hello_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "BigPassword12345Azerty",
+    "password": "BigPassword12345@",
     "database": "database_hello_production",
     "host": "127.0.0.1",
     "dialect": "mysql"
